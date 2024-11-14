@@ -284,7 +284,7 @@ ifdef login
 		$(if $(workers),--workers $(workers),)
 else
 	@echo "Running backend respecting the $(env) file";
-	uv run uvicorn \
+	LANGFLOW_AUTO_LOGIN=false uv run uvicorn \
 		--factory langflow.main:create_app \
 		--host 0.0.0.0 \
 		--port $(port) \
@@ -346,6 +346,7 @@ docker_build_frontend: dockerfile_build_fe clear_dockerimage ## build Frontend D
 dockerfile_build:
 	@echo 'BUILDING DOCKER IMAGE: ${DOCKERFILE}'
 	@docker build --rm \
+		--platform linux/amd64 \
 		-f ${DOCKERFILE} \
 		-t langflow:${VERSION} .
 

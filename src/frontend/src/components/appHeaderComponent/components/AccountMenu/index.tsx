@@ -89,12 +89,13 @@ export const AccountMenu = () => {
                 Feedback
               </HeaderMenuItemButton>
             ) : (
-              <HeaderMenuItemLink newPage href="https://docs.langflow.org">
-                Docs
-              </HeaderMenuItemLink>
+              <></>
+              // <HeaderMenuItemLink newPage href="https://docs.langflow.org">
+              //   Docs
+              // </HeaderMenuItemLink>
             )}
           </HeaderMenuItemsSection>
-          <HeaderMenuItemsSection>
+          {/* <HeaderMenuItemsSection>
             {ENABLE_DATASTAX_LANGFLOW ? (
               <HeaderMenuItemLink
                 newPage
@@ -119,7 +120,7 @@ export const AccountMenu = () => {
             <HeaderMenuItemLink newPage href="https://discord.gg/EqksyE2EX9">
               Join the Langflow Discord
             </HeaderMenuItemLink>
-          </HeaderMenuItemsSection>
+          </HeaderMenuItemsSection> */}
           {ENABLE_DATASTAX_LANGFLOW ? (
             <HeaderMenuItemsSection>
               <HeaderMenuItemLink href="/session/logout" icon="log-out">

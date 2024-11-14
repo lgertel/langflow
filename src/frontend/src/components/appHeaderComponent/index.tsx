@@ -1,12 +1,13 @@
 import AlertDropdown from "@/alerts/alertDropDown";
 import DataStaxLogo from "@/assets/DataStaxLogo.svg?react";
-import LangflowLogo from "@/assets/LangflowLogo.svg?react";
+import AIRLogo from "@/assets/AIRLogo.svg?react";
 import ShadTooltip from "@/components/shadTooltipComponent";
 import { CustomOrgSelector } from "@/customization/components/custom-org-selector";
 import { CustomProductSelector } from "@/customization/components/custom-product-selector";
 import {
   ENABLE_DATASTAX_LANGFLOW,
   ENABLE_NEW_LOGO,
+  ENABLE_LANGFLOW_STORE
 } from "@/customization/feature-flags";
 import { useCustomNavigate } from "@/customization/hooks/use-custom-navigate";
 import useTheme from "@/customization/hooks/use-custom-theme";
@@ -59,7 +60,7 @@ export default function AppHeader(): JSX.Element {
           {ENABLE_DATASTAX_LANGFLOW ? (
             <DataStaxLogo className="fill-black dark:fill-[white]" />
           ) : ENABLE_NEW_LOGO ? (
-            <LangflowLogo className="h-5 w-6" />
+            <AIRLogo className="h-5 w-6 scale-[1.5]" />
           ) : (
             <span className="fill-black text-2xl dark:fill-white">⛓️</span>
           )}
@@ -79,7 +80,7 @@ export default function AppHeader(): JSX.Element {
 
       {/* Right Section */}
       <div className={`flex items-center gap-2`}>
-        {!ENABLE_DATASTAX_LANGFLOW && (
+        {/* {!ENABLE_DATASTAX_LANGFLOW && (
           <>
             <Button
               unstyled
@@ -91,7 +92,7 @@ export default function AppHeader(): JSX.Element {
               <GithubStarComponent />
             </Button>
           </>
-        )}
+        )} */}
         <AlertDropdown
           notificationRef={notificationContentRef}
           onClose={() => setActiveState(null)}
@@ -129,7 +130,7 @@ export default function AppHeader(): JSX.Element {
             </Button>
           </ShadTooltip>
         </AlertDropdown>
-        {!ENABLE_DATASTAX_LANGFLOW && (
+        {!ENABLE_DATASTAX_LANGFLOW && ENABLE_LANGFLOW_STORE && (
           <>
             <ShadTooltip
               content="Go to LangflowStore"
