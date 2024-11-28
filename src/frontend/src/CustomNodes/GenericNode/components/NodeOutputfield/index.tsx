@@ -2,8 +2,8 @@ import { ICON_STROKE_WIDTH } from "@/constants/constants";
 import { cloneDeep } from "lodash";
 import { useEffect, useRef } from "react";
 import { useUpdateNodeInternals } from "reactflow";
-import { default as IconComponent } from "../../../../components/genericIconComponent";
-import ShadTooltip from "../../../../components/shadTooltipComponent";
+import { default as IconComponent } from "../../../../components/common/genericIconComponent";
+import ShadTooltip from "../../../../components/common/shadTooltipComponent";
 import { Button } from "../../../../components/ui/button";
 import useFlowStore from "../../../../stores/flowStore";
 import { useTypesStore } from "../../../../stores/typesStore";
@@ -132,7 +132,6 @@ export default function NodeOutputField({
         "relative mt-1 flex h-11 w-full flex-wrap items-center justify-between bg-muted px-5 py-2",
         lastOutput ? "rounded-b-[0.69rem]" : "",
         isToolMode && "bg-primary",
-        outputName === "component_as_tool" && "border-l-2 border-primary pl-2",
       )}
     >
       <>
@@ -158,8 +157,12 @@ export default function NodeOutputField({
                     className={cn(
                       "icon-size",
                       disabledOutput
-                        ? "text-placeholder-foreground opacity-60"
-                        : "text-placeholder-foreground hover:text-foreground",
+                        ? isToolMode
+                          ? "text-placeholder-foreground opacity-60"
+                          : "text-placeholder-foreground hover:text-foreground"
+                        : isToolMode
+                          ? "text-background hover:text-secondary-hover"
+                          : "text-placeholder-foreground hover:text-primary-hover",
                     )}
                     strokeWidth={ICON_STROKE_WIDTH}
                     name={data.node?.outputs![index].hidden ? "EyeOff" : "Eye"}
@@ -215,9 +218,13 @@ export default function NodeOutputField({
                       <IconComponent
                         className={cn(
                           "icon-size",
-                          displayOutputPreview && !unknownOutput
-                            ? "text-foreground hover:text-primary-hover"
-                            : "cursor-not-allowed text-placeholder-foreground opacity-60",
+                          isToolMode
+                            ? displayOutputPreview && !unknownOutput
+                              ? "text-background hover:text-secondary-hover"
+                              : "cursor-not-allowed text-placeholder-foreground opacity-80"
+                            : displayOutputPreview && !unknownOutput
+                              ? "text-foreground hover:text-primary-hover"
+                              : "cursor-not-allowed text-placeholder-foreground opacity-60",
                           errorOutput ? "text-destructive" : "",
                         )}
                         name={"ScanEye"}

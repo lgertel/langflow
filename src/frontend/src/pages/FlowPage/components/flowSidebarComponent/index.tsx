@@ -2,8 +2,8 @@ import Fuse from "fuse.js";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook"; // Import useHotkeys
 
-import ForwardedIconComponent from "@/components/genericIconComponent";
-import ShadTooltip from "@/components/shadTooltipComponent";
+import ForwardedIconComponent from "@/components/common/genericIconComponent";
+import ShadTooltip from "@/components/common/shadTooltipComponent";
 import { Button } from "@/components/ui/button";
 import {
   Disclosure,
@@ -134,6 +134,7 @@ export function FlowSidebarComponent() {
     const options = {
       keys: ["display_name", "description", "type", "category"],
       threshold: 0.2,
+      includeScore: true,
     };
 
     const fuseData = Object.entries(data).flatMap(([category, items]) =>
@@ -155,8 +156,11 @@ export function FlowSidebarComponent() {
   }, [search, getFilterEdge]);
 
   const hasResults = useMemo(() => {
-    return Object.values(dataFilter).some(
-      (category) => Object.keys(category).length > 0,
+    return Object.entries(dataFilter).some(
+      ([category, items]) =>
+        Object.keys(items).length > 0 &&
+        (CATEGORIES.find((c) => c.name === category) ||
+          BUNDLES.find((b) => b.name === category)),
     );
   }, [dataFilter]);
   const [sortedCategories, setSortedCategories] = useState<string[]>([]);
@@ -169,8 +173,14 @@ export function FlowSidebarComponent() {
       let combinedResults = {};
 
       if (fuse) {
-        const fuseResults = fuse.search(search);
-        setSortedCategories(fuseResults.map((result) => result.item.category));
+        const fuseResults = fuse.search(search).map((result) => ({
+          ...result,
+          item: { ...result.item, score: result.score },
+        }));
+        const fuseCategories = fuseResults.map(
+          (result) => result.item.category,
+        );
+        setSortedCategories(fuseCategories);
         combinedResults = combinedResultsFn(fuseResults, data);
 
         const traditionalResults = traditionalSearchMetadata(data, searchTerm);
@@ -182,9 +192,16 @@ export function FlowSidebarComponent() {
         );
 
         setSortedCategories(
-          Object.keys(filteredData).filter(
-            (category) => Object.keys(filteredData[category]).length > 0,
-          ),
+          Object.keys(filteredData)
+            .filter(
+              (category) =>
+                Object.keys(filteredData[category]).length > 0 &&
+                (CATEGORIES.find((c) => c.name === category) ||
+                  BUNDLES.find((b) => b.name === category)),
+            )
+            .toSorted((a, b) =>
+              fuseCategories.indexOf(b) < fuseCategories.indexOf(a) ? 1 : -1,
+            ),
         );
       }
     }
